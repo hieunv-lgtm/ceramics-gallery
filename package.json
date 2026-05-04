@@ -1,0 +1,8 @@
+{
+  "name": "ceramics-gallery",
+  "version": "1.0.0",
+  "description": "Phòng trưng bày Gốm Biên Hòa",
+  "scripts": {
+    "build": "node build.js"
+  }
+}
