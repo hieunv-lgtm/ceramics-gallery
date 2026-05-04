@@ -1,0 +1,15 @@
+# API Keys & Secrets - KHÔNG BAO GIỜ commit những file này
+config.js
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

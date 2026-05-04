@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gốm Việt — Phòng trưng bày</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink:     #0E0B09;
+  --deep:    #1A1410;
+  --panel:   #221A14;
+  --surface: #2E231B;
+  --border:  rgba(180,140,100,0.15);
+  --gold:    #C8964A;
+  --gold-dim: rgba(200,150,74,0.5);
+  --sand:    #E8D5B4;
+  --sand-dim: rgba(232,213,180,0.5);
+  --dust:    rgba(232,213,180,0.08);
+  --clay:    #B5603A;
+  --text:    #D4C4A8;
+  --muted:   #7A6A55;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--ink);
+  color: var(--text);
+  min-height: 100vh;
+  cursor: default;
+}
+
+/* ── GRAIN OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 3rem;
+  background: linear-gradient(to bottom, rgba(14,11,9,0.95) 0%, transparent 100%);
+}
+
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  color: var(--sand);
+  text-transform: uppercase;
+}
+
+.nav-logo em {
+  color: var(--gold);
+  font-style: italic;
+  font-weight: 400;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.nav-count {
+  color: var(--gold);
+  font-weight: 500;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 8rem 2rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 30%, rgba(181,96,58,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 80%, rgba(200,150,74,0.06) 0%, transparent 60%);
+}
+
+.hero-eyebrow {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-eyebrow::before,
+.hero-eyebrow::after {
+  content: '';
+  display: block;
+  width: 36px;
+  height: 1px;
+  background: var(--gold-dim);
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  color: var(--sand);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.hero-sub {
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  max-width: 420px;
+  line-height: 1.8;
+  margin-bottom: 3rem;
+}
+
+/* ── AI SEARCH ── */
+.search-wrap {
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+  z-index: 1;
+}
+
+.search-field {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1rem 4.5rem 1rem 1.5rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--sand);
+  letter-spacing: 0.04em;
+  outline: none;
+  transition: border-color 0.3s, background 0.3s;
+}
+
+.search-field::placeholder { color: var(--muted); }
+.search-field:focus { border-color: var(--gold-dim); background: rgba(255,255,255,0.06); }
+
+.search-btn {
+  position: absolute;
+  right: 0; top: 0; bottom: 0;
+  width: 56px;
+  background: var(--clay);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  color: white;
+  font-size: 1rem;
+}
+
+.search-btn:hover { background: var(--gold); }
+.search-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.ai-reply {
+  margin-top: 1px;
+  background: rgba(200,150,74,0.06);
+  border: 1px solid rgba(200,150,74,0.2);
+  border-top: none;
+  padding: 1rem 1.5rem;
+  font-size: 0.83rem;
+  font-weight: 300;
+  color: var(--sand);
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  display: none;
+  text-align: left;
+}
+
+.ai-reply.show { display: block; animation: slideDown 0.3s ease; }
+
+.ai-tag {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+@keyframes slideDown { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── DIVIDER ── */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0 3rem;
+  margin-bottom: 2.5rem;
+}
+
+.section-divider span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ── FILTERS ── */
+.filters {
+  display: flex;
+  gap: 0;
+  padding: 0 3rem;
+  margin-bottom: 3rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.filters::-webkit-scrollbar { display: none; }
+
+.filter-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.75rem 1.5rem;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  margin-bottom: -1px;
+}
+
+.filter-btn:hover { color: var(--sand); }
+.filter-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* ── GALLERY GRID ── */
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  margin: 0 3rem 4rem;
+}
+
+.gallery-item {
+  background: var(--ink);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 3/4;
+  display: flex;
+  flex-direction: column;
+}
+
+.gallery-item:hover .item-overlay { opacity: 1; }
+.gallery-item:hover .item-emoji { transform: scale(1.06); }
+
+.item-visual {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.item-bg {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.item-emoji {
+  font-size: 5.5rem;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4));
+}
+
+.item-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(14,11,9,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: 2;
+}
+
+.view-btn {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sand);
+  border: 1px solid var(--border);
+  padding: 0.6rem 1.5rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+.item-info {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--border);
+  background: var(--ink);
+  position: relative;
+  z-index: 1;
+}
+
+.item-cat {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.3rem;
+}
+
+.item-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--sand);
+  line-height: 1.3;
+  margin-bottom: 0.5rem;
+}
+
+.item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.item-price {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: 0.03em;
+}
+
+.item-origin {
+  font-size: 0.7rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+/* highlighted from AI */
+.gallery-item.lit .item-info {
+  border-top-color: var(--gold-dim);
+}
+.gallery-item.lit::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid rgba(200,150,74,0.4);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ── LIGHTBOX ── */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s;
+}
+
+.lightbox.open { opacity: 1; pointer-events: all; }
+
+.lb-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10,8,6,0.92);
+  backdrop-filter: blur(12px);
+}
+
+.lb-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  width: 100%;
+  max-width: 920px;
+  margin: auto;
+  transform: translateY(20px);
+  transition: transform 0.35s;
+}
+
+.lightbox.open .lb-content { transform: translateY(0); }
+
+.lb-visual {
+  width: 45%;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9rem;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.lb-visual-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+}
+
+.lb-visual-emoji {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 12px 40px rgba(0,0,0,0.6));
+}
+
+.lb-detail {
+  flex: 1;
+  background: var(--deep);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lb-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.lb-close:hover { border-color: var(--clay); color: var(--sand); }
+
+.lb-cat {
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+
+.lb-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 300;
+  color: var(--sand);
+  line-height: 1.15;
+  margin-bottom: 1.5rem;
+}
+
+.lb-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--gold-dim);
+  margin-bottom: 1.5rem;
+}
+
+.lb-desc {
+  font-size: 0.88rem;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.9;
+  margin-bottom: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.lb-attrs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.lb-attr-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.2rem;
+}
+
+.lb-attr-val {
+  font-size: 0.9rem;
+  color: var(--sand);
+  font-weight: 400;
+}
+
+.lb-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: var(--gold);
+  letter-spacing: 0.02em;
+}
+
+/* ── EMPTY ── */
+.empty {
+  text-align: center;
+  padding: 6rem 2rem;
+  color: var(--muted);
+}
+
+.empty-glyph {
+  font-size: 4rem;
+  opacity: 0.3;
+  margin-bottom: 1rem;
+}
+
+.empty h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.4rem;
+  font-weight: 300;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+
+/* ── SPINNER ── */
+.spin {
+  display: inline-block;
+  width: 14px; height: 14px;
+  border: 1.5px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── ANIMATIONS ── */
+.gallery-item {
+  opacity: 0;
+  transform: translateY(16px);
+  animation: rise 0.5s ease forwards;
+}
+@keyframes rise { to { opacity:1; transform:translateY(0); } }
+
+/* stagger */
+.gallery-item:nth-child(1) { animation-delay: 0.05s; }
+.gallery-item:nth-child(2) { animation-delay: 0.10s; }
+.gallery-item:nth-child(3) { animation-delay: 0.15s; }
+.gallery-item:nth-child(4) { animation-delay: 0.20s; }
+.gallery-item:nth-child(5) { animation-delay: 0.25s; }
+.gallery-item:nth-child(6) { animation-delay: 0.30s; }
+.gallery-item:nth-child(7) { animation-delay: 0.35s; }
+.gallery-item:nth-child(8) { animation-delay: 0.40s; }
+.gallery-item:nth-child(9) { animation-delay: 0.45s; }
+
+@media (max-width: 768px) {
+  nav { padding: 1.2rem 1.5rem; }
+  .hero { padding: 6rem 1.5rem 3rem; }
+  .gallery { margin: 0 0 3rem; grid-template-columns: repeat(2, 1fr); }
+  .filters { padding: 0 1.5rem; }
+  .section-divider { padding: 0 1.5rem; }
+  .lb-content { flex-direction: column; max-width: 440px; }
+  .lb-visual { width: 100%; min-height: 260px; }
+  footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Gốm <em>Việt</em></div>
+  <div class="nav-right">
+    <span>Bộ sưu tập</span>
+    <span>·</span>
+    <span id="navCount" class="nav-count">0</span>
+    <span>tác phẩm</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Phòng trưng bày</div>
+  <h1 class="hero-title">Nghệ thuật<br><em>đất nung</em></h1>
+  <p class="hero-sub">Những tác phẩm gốm thủ công được chọn lọc từ các làng nghề truyền thống Việt Nam</p>
+
+  <div class="search-wrap">
+    <input class="search-field" type="text" id="searchInput"
+      placeholder="Hỏi trợ lý AI — &quot;Tìm bình gốm cắm hoa phong cách tối giản&quot;…" />
+    <button class="search-btn" id="searchBtn" onclick="aiSearch()">
+      <span id="searchIcon">✦</span>
+    </button>
+    <div class="ai-reply" id="aiReply">
+      <div class="ai-tag">Gợi ý từ AI</div>
+      <div id="aiText"></div>
+    </div>
+  </div>
+</div>
+
+<!-- COLLECTION -->
+<div class="section-divider">
+  <div class="divider-line"></div>
+  <span>Bộ sưu tập</span>
+  <div class="divider-line"></div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filter('all', this)">Tất cả</button>
+  <button class="filter-btn" onclick="filter('Bình', this)">Bình hoa</button>
+  <button class="filter-btn" onclick="filter('Chén', this)">Chén bát</button>
+  <button class="filter-btn" onclick="filter('Ấm', this)">Ấm trà</button>
+  <button class="filter-btn" onclick="filter('Tượng', this)">Tượng</button>
+  <button class="filter-btn" onclick="filter('Dĩa', this)">Dĩa</button>
+</div>
+
+<div class="gallery" id="gallery"></div>
+
+<div class="empty" id="emptyState" style="display:none">
+  <div class="empty-glyph">🏺</div>
+  <h3>Không tìm thấy tác phẩm</h3>
+  <p style="font-size:0.82rem;margin-top:0.3rem;">Thử danh mục khác hoặc đặt câu hỏi cho AI</p>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-backdrop" onclick="closeLightbox()"></div>
+  <div class="lb-content">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <div class="lb-visual" id="lbVisual">
+      <div class="lb-visual-bg" id="lbBg"></div>
+      <div class="lb-visual-emoji" id="lbEmoji"></div>
+    </div>
+    <div class="lb-detail">
+      <div class="lb-cat" id="lbCat"></div>
+      <div class="lb-name" id="lbName"></div>
+      <div class="lb-divider"></div>
+      <p class="lb-desc" id="lbDesc"></p>
+      <div class="lb-attrs">
+        <div>
+          <div class="lb-attr-label">Xuất xứ</div>
+          <div class="lb-attr-val" id="lbOrigin"></div>
+        </div>
+        <div>
+          <div class="lb-attr-label">Chất liệu</div>
+          <div class="lb-attr-val" id="lbMaterial"></div>
+        </div>
+      </div>
+      <div class="lb-price" id="lbPrice"></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>© 2025 Gốm Việt — Phòng trưng bày</span>
+  <span>Tất cả tác phẩm là gốm thủ công</span>
+</footer>
+
+<script>
+const COLLECTION = [
+  {
+    id: 1, emoji: '🏺', name: 'Bình gốm men ngọc Bát Tràng',
+    category: 'Bình hoa', price: 320000,
+    origin: 'Bát Tràng, Hà Nội', material: 'Gốm đất sét trắng',
+    desc: 'Bình gốm men ngọc truyền thống với hoa văn rồng phượng đắp nổi tinh xảo. Được tạo hình trên bàn xoay bởi nghệ nhân 30 năm kinh nghiệm tại làng Bát Tràng.',
+    bg: 'radial-gradient(circle at 40% 40%, #6B4A32 0%, #2E1A0F 100%)',
+  },
+  {
+    id: 2, emoji: '🍵', name: 'Chén trà men xanh rêu',
+    category: 'Chén bát', price: 95000,
+    origin: 'Biên Hòa, Đồng Nai', material: 'Gốm sứ cao cấp',
+    desc: 'Chén uống trà kiểu dáng tối giản, men xanh rêu tự nhiên chảy tự do. Cốt sứ mỏng nhẹ, truyền nhiệt tốt, lý tưởng cho trà xanh và trà oolong.',
+    bg: 'radial-gradient(circle at 60% 30%, #3A5C3A 0%, #1A2E1A 100%)',
+  },
+  {
+    id: 3, emoji: '🫖', name: 'Ấm trà đất nung Phù Lãng',
+    category: 'Ấm trà', price: 480000,
+    origin: 'Phù Lãng, Bắc Ninh', material: 'Đất nung truyền thống',
+    desc: 'Ấm trà đất nung mộc mạc với hoa văn khắc tay hoa sen. Đất nung có tính thấm hút tốt, giúp hương trà trở nên thanh khiết và sâu lắng hơn theo thời gian.',
+    bg: 'radial-gradient(circle at 50% 50%, #7A3F20 0%, #3D1E0F 100%)',
+  },
+  {
+    id: 4, emoji: '🪴', name: 'Chậu bonsai men rạn cổ kính',
+    category: 'Bình hoa', price: 265000,
+    origin: 'Bát Tràng, Hà Nội', material: 'Gốm men rạn',
+    desc: 'Chậu gốm men rạn với vết nứt tự nhiên theo tuổi gốm — mỗi chiếc là một bản duy nhất. Phù hợp trồng bonsai, xương rồng và cây thủy sinh.',
+    bg: 'radial-gradient(circle at 35% 65%, #4A5C6B 0%, #1A2430 100%)',
+  },
+  {
+    id: 5, emoji: '🏮', name: 'Đèn lồng gốm Hội An',
+    category: 'Tượng trang trí', price: 540000,
+    origin: 'Hội An, Quảng Nam', material: 'Gốm sứ & đồng thau',
+    desc: 'Đèn lồng gốm đục lỗ thủ công, toả hoa văn ánh sáng khi thắp nến. Phong cách phố cổ Hội An — bức tranh sống động của làng nghề miền Trung.',
+    bg: 'radial-gradient(circle at 60% 40%, #8B5A1A 0%, #3D2508 100%)',
+  },
+  {
+    id: 6, emoji: '🥣', name: 'Dĩa men cobalt xanh trắng',
+    category: 'Dĩa', price: 110000,
+    origin: 'Minh Long, Bình Dương', material: 'Sứ Minh Long cao cấp',
+    desc: 'Dĩa ăn men cobalt xanh trắng truyền thống. Họa tiết hoa cúc vẽ tay bằng bút lông. An toàn thực phẩm, lò vi sóng và máy rửa bát.',
+    bg: 'radial-gradient(circle at 40% 30%, #1A3A5C 0%, #0A1A2E 100%)',
+  },
+  {
+    id: 7, emoji: '🧉', name: 'Ly gốm thô unglazed',
+    category: 'Chén bát', price: 145000,
+    origin: 'Thanh Hà, Quảng Nam', material: 'Gốm thô không tráng men',
+    desc: 'Ly gốm thô với bề mặt nhám tự nhiên, không tráng men — cảm giác gần gũi với đất và thiên nhiên. Phong cách wabi-sabi tối giản đang được ưa chuộng.',
+    bg: 'radial-gradient(circle at 50% 50%, #5C4A32 0%, #2E2316 100%)',
+  },
+  {
+    id: 8, emoji: '🌸', name: 'Bình hoa dẹt văn hoa sen',
+    category: 'Bình hoa', price: 390000,
+    origin: 'Bát Tràng, Hà Nội', material: 'Gốm men trắng ngà',
+    desc: 'Bình dẹt kiểu ikebana, thân trang trí họa tiết hoa sen dát vàng 24K. Thiết kế hiện đại pha nét truyền thống — phù hợp không gian nội thất cao cấp.',
+    bg: 'radial-gradient(circle at 55% 35%, #7A5A4A 0%, #3A2518 100%)',
+  },
+  {
+    id: 9, emoji: '🎋', name: 'Tượng thiền gốm Phật thủ',
+    category: 'Tượng trang trí', price: 620000,
+    origin: 'Bát Tràng, Hà Nội', material: 'Gốm trắng men bóng',
+    desc: 'Tượng thiền định tạo hình bàn tay Phật tổ, men trắng thuần khiết. Điêu khắc thủ công, từng đường nét đều mang hơi thở tâm linh và tĩnh lặng.',
+    bg: 'radial-gradient(circle at 45% 45%, #4A4A5A 0%, #20202E 100%)',
+  },
+];
+
+let currentFilter = 'all';
+
+function fmtPrice(n) {
+  return new Intl.NumberFormat('vi-VN').format(n) + ' ₫';
+}
+
+function render(list) {
+  const g = document.getElementById('gallery');
+  const e = document.getElementById('emptyState');
+  document.getElementById('navCount').textContent = list.length;
+
+  if (!list.length) { g.innerHTML = ''; e.style.display = 'block'; return; }
+  e.style.display = 'none';
+
+  g.innerHTML = list.map(p => `
+    <div class="gallery-item" id="gi-${p.id}" onclick="openLightbox(${p.id})">
+      <div class="item-visual">
+        <div class="item-bg" style="background:${p.bg}"></div>
+        <div class="item-emoji">${p.emoji}</div>
+        <div class="item-overlay">
+          <div class="view-btn">Xem chi tiết</div>
+        </div>
+      </div>
+      <div class="item-info">
+        <div class="item-cat">${p.category}</div>
+        <div class="item-name">${p.name}</div>
+        <div class="item-meta">
+          <div class="item-price">${fmtPrice(p.price)}</div>
+          <div class="item-origin">${p.origin.split(',')[0]}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filter(kw, el) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  currentFilter = kw;
+  clearHighlights();
+  const list = kw === 'all' ? COLLECTION : COLLECTION.filter(p => p.category.includes(kw) || p.name.includes(kw));
+  render(list);
+}
+
+function getFiltered() {
+  return currentFilter === 'all' ? COLLECTION : COLLECTION.filter(p => p.category.includes(currentFilter) || p.name.includes(currentFilter));
+}
+
+// LIGHTBOX
+function openLightbox(id) {
+  const p = COLLECTION.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('lbBg').style.background = p.bg;
+  document.getElementById('lbEmoji').textContent = p.emoji;
+  document.getElementById('lbCat').textContent = p.category;
+  document.getElementById('lbName').textContent = p.name;
+  document.getElementById('lbDesc').textContent = p.desc;
+  document.getElementById('lbOrigin').textContent = p.origin;
+  document.getElementById('lbMaterial').textContent = p.material;
+  document.getElementById('lbPrice').textContent = fmtPrice(p.price);
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+// HIGHLIGHTS
+function clearHighlights() {
+  document.querySelectorAll('.gallery-item.lit').forEach(el => el.classList.remove('lit'));
+}
+
+// AI SEARCH
+async function aiSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (!q) return;
+
+  const btn = document.getElementById('searchBtn');
+  const icon = document.getElementById('searchIcon');
+  btn.disabled = true;
+  icon.innerHTML = '<span class="spin"></span>';
+
+  const productList = COLLECTION.map(p =>
+    `[ID:${p.id}] ${p.name} — ${p.category} — ${fmtPrice(p.price)} — ${p.origin} — ${p.desc}`
+  ).join('\n');
+
+  const sys = `Bạn là giám tuyển phòng trưng bày gốm "Gốm Việt". Hãy tư vấn tác phẩm phù hợp từ bộ sưu tập.
+Trả lời bằng tiếng Việt, văn phong lịch lãm, ngắn gọn (2-3 câu).
+Cuối câu trả lời ghi: [IDs:1,3] với các ID phù hợp.
+
+Bộ sưu tập:\n${productList}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: sys,
+        messages: [{ role: 'user', content: q }]
+      })
+    });
+
+    const data = await res.json();
+    const answer = data.content?.[0]?.text || 'Không tìm thấy tác phẩm phù hợp.';
+
+    const idMatch = answer.match(/\[IDs?:\s*([\d,\s]+)\]/i);
+    const displayText = answer.replace(/\[IDs?:[\s\d,]+\]/gi, '').trim();
+
+    document.getElementById('aiText').textContent = displayText;
+    document.getElementById('aiReply').classList.add('show');
+
+    clearHighlights();
+    if (idMatch) {
+      const ids = idMatch[1].split(',').map(s => parseInt(s.trim())).filter(Boolean);
+      // show all, then highlight
+      render(COLLECTION);
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      document.querySelector('.filter-btn').classList.add('active');
+      currentFilter = 'all';
+      setTimeout(() => {
+        ids.forEach(id => {
+          const el = document.getElementById(`gi-${id}`);
+          if (el) {
+            el.classList.add('lit');
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        });
+      }, 100);
+    }
+  } catch {
+    document.getElementById('aiText').textContent = 'Không thể kết nối AI. Vui lòng thử lại.';
+    document.getElementById('aiReply').classList.add('show');
+  } finally {
+    btn.disabled = false;
+    icon.textContent = '✦';
+  }
+}
+
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') aiSearch();
+});
+
+// INIT
+render(COLLECTION);
+</script>
+</body>
+</html>

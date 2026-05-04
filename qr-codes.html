@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mã QR — Bộ sưu tập Gốm Biên Hòa (268 hiện vật)</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Jost:wght@300;400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Jost',sans-serif;background:#0A0806;color:#C4B498;padding:2rem}
+h1{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300;color:#E8D5B4;text-align:center;margin-bottom:0.5rem}
+h1 em{color:#C8964A;font-style:italic}
+.subtitle{text-align:center;font-size:0.7rem;color:#6A5A45;letter-spacing:0.15em;text-transform:uppercase;margin-bottom:1.5rem}
+.toolbar{display:flex;justify-content:center;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;align-items:center}
+.print-btn{background:#C8964A;border:none;color:#0A0806;padding:0.6rem 1.5rem;font-family:'Jost',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-weight:500}
+.print-btn:hover{background:#E8D5B4}
+.page-info{font-size:0.75rem;color:#6A5A45;letter-spacing:0.1em}
+.nav-btn{background:none;border:1px solid rgba(180,140,100,0.12);color:#C4B498;padding:0.5rem 1rem;font-family:'Jost',sans-serif;font-size:0.72rem;cursor:pointer;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.2s}
+.nav-btn:hover{border-color:rgba(200,150,74,0.45);color:#C8964A}
+.nav-btn:disabled{opacity:0.3;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.5rem}
+.qr-item{text-align:center;background:#12100D;border:1px solid rgba(180,140,100,0.12);padding:1.2rem}
+.qr-canvas{margin-bottom:0.8rem}
+.qr-canvas img{width:140px;height:140px}
+.qr-name{font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:#E8D5B4;font-weight:400;margin-bottom:0.3rem}
+.qr-cat{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;color:#C8964A;margin-bottom:0.2rem}
+.qr-id{font-size:0.6rem;color:#6A5A45;letter-spacing:0.1em}
+.back-link{display:block;text-align:center;margin-top:2rem;font-size:0.72rem;color:#C8964A;text-decoration:none;letter-spacing:0.1em}
+@media print{
+  body{background:white;color:black;padding:1rem}
+  .toolbar,.back-link{display:none!important}
+  .qr-item{border:1px solid #ccc;break-inside:avoid}
+  .qr-name{color:black}
+  .qr-cat{color:#666}
+  .qr-id{color:#999}
+}
+</style>
+</head>
+<body>
+<h1>Mã QR — Gốm <em>Biên Hòa</em></h1>
+<div class="subtitle">◆ 268 hiện vật số hóa — Quét mã để xem chi tiết tác phẩm</div>
+
+<div class="toolbar">
+  <button class="nav-btn" id="prevBtn" onclick="changePage(-1)">‹ Trang trước</button>
+  <span class="page-info" id="pageInfo">Trang 1 / 12</span>
+  <button class="nav-btn" id="nextBtn" onclick="changePage(1)">Trang sau ›</button>
+  <button class="print-btn" onclick="window.print()">🖨 In trang này</button>
+</div>
+
+<div class="grid" id="qrGrid"></div>
+
+<div class="toolbar" style="margin-top:2rem">
+  <button class="nav-btn" id="prevBtn2" onclick="changePage(-1)">‹ Trang trước</button>
+  <span class="page-info" id="pageInfo2">Trang 1 / 12</span>
+  <button class="nav-btn" id="nextBtn2" onclick="changePage(1)">Trang sau ›</button>
+</div>
+
+<a class="back-link" href="index.html">← Về phòng trưng bày</a>
+
+<script src="collection_data.js"></script>
+<script>
+const BASE_URL = window.location.origin + window.location.pathname.replace('qr-codes.html', 'index.html');
+const PER_PAGE = 24;
+let currentPage = 1;
+const totalPages = Math.ceil(COLLECTION.length / PER_PAGE);
+
+function renderPage(page) {
+  currentPage = page;
+  const grid = document.getElementById('qrGrid');
+  const start = (page - 1) * PER_PAGE;
+  const end = Math.min(start + PER_PAGE, COLLECTION.length);
+  const items = COLLECTION.slice(start, end);
+  
+  grid.innerHTML = items.map(p => {
+    const url = BASE_URL + '?piece=' + p.id;
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=' + encodeURIComponent(url);
+    return '<div class="qr-item">' +
+      '<div class="qr-canvas"><img src="' + qrUrl + '" alt="QR ' + p.ma_bt + '"></div>' +
+      '<div class="qr-cat">' + p.category + '</div>' +
+      '<div class="qr-name">' + p.name + '</div>' +
+      '<div class="qr-id">Mã BT: ' + p.ma_bt + ' · ID: ' + p.id + '</div>' +
+    '</div>';
+  }).join('');
+  
+  const info = 'Trang ' + page + ' / ' + totalPages + ' (' + (start+1) + '–' + end + ' / ' + COLLECTION.length + ')';
+  document.getElementById('pageInfo').textContent = info;
+  document.getElementById('pageInfo2').textContent = info;
+  document.getElementById('prevBtn').disabled = page <= 1;
+  document.getElementById('prevBtn2').disabled = page <= 1;
+  document.getElementById('nextBtn').disabled = page >= totalPages;
+  document.getElementById('nextBtn2').disabled = page >= totalPages;
+  
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function changePage(dir) {
+  const next = currentPage + dir;
+  if (next >= 1 && next <= totalPages) renderPage(next);
+}
+
+renderPage(1);
+</script>
+</body>
+</html>

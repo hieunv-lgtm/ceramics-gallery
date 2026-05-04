@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Quét QR — Gốm Biên Hòa</title>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,400&family=Jost:wght@300;400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--ink:#0A0806;--deep:#12100D;--panel:#1A1611;--surface:#231E18;--border:rgba(180,140,100,0.12);--gold:#C8964A;--gold-dim:rgba(200,150,74,0.45);--sand:#E8D5B4;--clay:#B5603A;--copper:#3A7A6A;--text:#C4B498;--muted:#6A5A45}
+body{font-family:'Jost',sans-serif;background:var(--ink);color:var(--text);min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+
+/* HEADER */
+.header{padding:1rem 1.5rem;text-align:center;border-bottom:1px solid var(--border)}
+.header h1{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:300;color:var(--sand);letter-spacing:0.1em}
+.header h1 em{color:var(--gold);font-style:italic}
+.header-sub{font-size:0.65rem;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;margin-top:0.3rem}
+
+/* SCANNER */
+.scanner-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;position:relative}
+#qr-reader{width:100%;max-width:360px;border:1px solid var(--border);overflow:hidden;border-radius:4px}
+#qr-reader video{border-radius:4px}
+.scan-label{font-size:0.7rem;color:var(--muted);letter-spacing:0.12em;text-transform:uppercase;margin-top:1rem;text-align:center}
+.scan-hint{font-size:0.75rem;color:var(--muted);text-align:center;margin-top:0.5rem;line-height:1.6}
+
+/* CONTROLS */
+.controls{display:flex;gap:0.8rem;margin-top:1.2rem;justify-content:center}
+.ctrl-btn{background:var(--panel);border:1px solid var(--border);color:var(--sand);padding:0.5rem 1.2rem;font-family:'Jost',sans-serif;font-size:0.72rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+.ctrl-btn:hover{border-color:var(--gold);color:var(--gold)}
+.ctrl-btn.active{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+
+/* RESULT CARD */
+.result-overlay{position:fixed;inset:0;background:rgba(6,5,4,0.95);z-index:100;display:none;align-items:center;justify-content:center;padding:1.5rem}
+.result-overlay.show{display:flex}
+.result-card{background:var(--deep);border:1px solid var(--border);max-width:420px;width:100%;max-height:90vh;overflow-y:auto;animation:cardIn 0.35s ease}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.rc-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+.rc-body{padding:1.5rem}
+.rc-cat{font-size:0.6rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem}
+.rc-name{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;color:var(--sand);line-height:1.2;margin-bottom:1rem}
+.rc-divider{width:36px;height:1px;background:var(--gold-dim);margin-bottom:1rem}
+.rc-desc{font-size:0.8rem;color:var(--muted);line-height:1.9;font-weight:300;margin-bottom:1.5rem}
+.rc-attrs{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:1.5rem}
+.rc-attr-label{font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.15rem}
+.rc-attr-val{font-size:0.82rem;color:var(--sand);font-weight:400}
+.rc-origin{display:inline-flex;align-items:center;gap:6px;font-size:0.68rem;color:var(--copper);background:rgba(58,122,106,0.08);border:1px solid rgba(58,122,106,0.15);padding:0.3rem 0.8rem}
+
+.rc-actions{display:flex;gap:0.6rem;margin-top:1.2rem}
+.rc-btn{flex:1;padding:0.7rem;border:1px solid var(--border);background:transparent;color:var(--sand);font-family:'Jost',sans-serif;font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.rc-btn:hover{border-color:var(--gold);color:var(--gold)}
+.rc-btn.primary{background:var(--gold);color:var(--ink);border-color:var(--gold)}
+.rc-btn.primary:hover{background:var(--sand)}
+
+/* STATUS */
+.status{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--ink);padding:0.5rem 1.5rem;font-size:0.72rem;font-weight:500;letter-spacing:0.1em;border-radius:2px;opacity:0;transition:opacity 0.3s;z-index:200;white-space:nowrap}
+.status.show{opacity:1}
+
+/* FOOTER */
+.app-footer{padding:1rem 1.5rem;text-align:center;border-top:1px solid var(--border);font-size:0.65rem;color:var(--muted);letter-spacing:0.08em}
+.app-footer a{color:var(--gold);text-decoration:none}
+
+/* QR reader overrides */
+#qr-reader__scan_region{background:var(--ink)!important}
+#qr-reader__dashboard{background:var(--panel)!important;padding:0.8rem!important}
+#qr-reader__dashboard button{background:var(--clay)!important;border:none!important;color:white!important;padding:0.5rem 1rem!important;font-family:'Jost',sans-serif!important;font-size:0.75rem!important;cursor:pointer!important;border-radius:2px!important}
+#qr-reader__dashboard span,#qr-reader__dashboard a{color:var(--text)!important;font-family:'Jost',sans-serif!important;font-size:0.75rem!important}
+select{background:var(--surface)!important;color:var(--sand)!important;border:1px solid var(--border)!important;padding:0.3rem!important;font-family:'Jost',sans-serif!important}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Gốm <em>Biên Hòa</em></h1>
+  <div class="header-sub">◆ Quét mã QR để khám phá tác phẩm</div>
+</div>
+
+<div class="scanner-wrap">
+  <div id="qr-reader"></div>
+  <div class="scan-label">Hướng camera vào mã QR trên hiện vật</div>
+  <div class="scan-hint">Mỗi tác phẩm trong phòng trưng bày có mã QR riêng.<br>Quét để xem thông tin chi tiết.</div>
+</div>
+
+<!-- RESULT OVERLAY -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card" id="resultCard"></div>
+</div>
+
+<div class="status" id="status"></div>
+
+<div class="app-footer">
+  <a href="index.html">← Về phòng trưng bày</a> · <a href="qr-codes.html">In mã QR</a>
+</div>
+
+<script src="collection_data.js"></script>
+<script>
+
+let scanner = null;
+
+function initScanner() {
+  scanner = new Html5Qrcode("qr-reader");
+  scanner.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: { width: 250, height: 250 } },
+    onScanSuccess,
+    () => {}
+  ).catch(err => {
+    document.querySelector('.scan-label').textContent = 'Không thể truy cập camera';
+    document.querySelector('.scan-hint').textContent = 'Vui lòng cấp quyền camera hoặc thử trình duyệt khác.';
+  });
+}
+
+function onScanSuccess(decoded) {
+  // Parse piece ID from URL or direct ID
+  let pieceId = null;
+  try {
+    const url = new URL(decoded);
+    pieceId = parseInt(url.searchParams.get('piece'));
+  } catch {
+    pieceId = parseInt(decoded);
+  }
+
+  const piece = COLLECTION.find(p => p.id === pieceId);
+  if (!piece) {
+    showStatus('Mã QR không thuộc bộ sưu tập');
+    return;
+  }
+
+  // Pause scanner
+  scanner.pause(true);
+  showPiece(piece);
+  showStatus('Đã nhận diện: ' + piece.name);
+}
+
+function showPiece(p) {
+  const card = document.getElementById('resultCard');
+  card.innerHTML = `
+    <img class="rc-img" src="${p.img}" alt="${p.name}">
+    <div class="rc-body">
+      <div class="rc-cat">${p.category}</div>
+      <div class="rc-name">${p.name}</div>
+      <div class="rc-divider"></div>
+      <div class="rc-attrs">
+        <div><div class="rc-attr-label">Mã BT</div><div class="rc-attr-val">${p.ma_bt}</div></div>
+        <div><div class="rc-attr-label">Chất liệu</div><div class="rc-attr-val">${p.material}</div></div>
+        <div><div class="rc-attr-label">Kích thước</div><div class="rc-attr-val">${p.size || '—'}</div></div>
+        <div><div class="rc-attr-label">Năm sáng tác</div><div class="rc-attr-val">${p.period || '—'}</div></div>
+      </div>
+      <div class="rc-origin">◆ ${p.origin || 'Trường CĐ MTTD Đồng Nai'}</div>
+      <div class="rc-actions">
+        <button class="rc-btn" onclick="closeResult()">Quét tiếp</button>
+        <a class="rc-btn primary" href="index.html?piece=${p.id}">Xem trong gallery</a>
+      </div>
+    </div>
+  `;
+  document.getElementById('resultOverlay').classList.add('show');
+}
+
+function closeResult() {
+  document.getElementById('resultOverlay').classList.remove('show');
+  if (scanner) scanner.resume();
+}
+
+function showStatus(msg) {
+  const s = document.getElementById('status');
+  s.textContent = msg;
+  s.classList.add('show');
+  setTimeout(() => s.classList.remove('show'), 2500);
+}
+
+document.getElementById('resultOverlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeResult();
+});
+
+initScanner();
+</script>
+</body>
+</html>

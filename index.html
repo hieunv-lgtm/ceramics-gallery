@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gốm Biên Hòa — Phòng Trưng Bày Nghệ Thuật</title>
+<meta name="description" content="Phòng trưng bày nghệ thuật Gốm Biên Hòa — 268 hiện vật số hóa từ bộ sưu tập của Trường Cao đẳng Mỹ thuật Trang trí Đồng Nai. Di sản gốm mỹ nghệ hơn 300 năm.">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">Gốm <em>Biên Hòa</em></div>
+  <div class="nav-center">
+    <a class="nav-link active" data-section="hero" onclick="navTo('#hero',this)">Trang chủ</a>
+    <a class="nav-link" data-section="collection" onclick="navTo('#collection',this)">Bộ sưu tập</a>
+    <a class="nav-link" data-section="about" onclick="navTo('#about',this)">Giới thiệu</a>
+    <a class="nav-link" data-section="aiSection" onclick="navTo('#aiSection',this)">Trợ lý AI</a>
+  </div>
+  <div class="nav-right">
+    <span id="navCount" class="nav-count">0</span>
+    <span>tác phẩm</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="hero">
+  <div class="hero-badge">◆ Di sản văn hóa Đồng Nai</div>
+  <div class="hero-eyebrow">Phòng trưng bày số</div>
+  <h1 class="hero-title">Nghệ thuật<br><em>Gốm Biên Hòa</em></h1>
+  <p class="hero-sub">268 tác phẩm số hóa từ bộ sưu tập của Trường Cao đẳng Mỹ thuật Trang trí Đồng Nai — hơn ba thế kỷ tinh hoa gốm mỹ nghệ, nơi giao thoa của nghệ thuật Việt, Hoa và Pháp.</p>
+
+  <div class="timeline-strip fade-in">
+    <div class="timeline-item">
+      <div class="timeline-year">1679</div>
+      <div class="timeline-label">Khởi nguồn</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">1903</div>
+      <div class="timeline-label">Trường Mỹ Nghệ</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-year">268</div>
+      <div class="timeline-label">Hiện vật số hóa</div>
+    </div>
+  </div>
+
+  <div class="hero-cta-row">
+    <button class="cta-btn" onclick="navTo('#collection')">Khám phá bộ sưu tập</button>
+    <button class="cta-btn cta-outline" onclick="navTo('#aiSection')">Hỏi trợ lý AI</button>
+  </div>
+</div>
+
+<!-- ══════════ COLLECTION ══════════ -->
+<div id="collection">
+  <div class="section">
+    <div class="section-header">
+      <div class="divider-line"></div>
+      <span>Bộ sưu tập hiện vật</span>
+      <div class="divider-line"></div>
+    </div>
+  </div>
+
+  <div class="collection-toolbar">
+    <div class="filters" id="filterBar">
+      <button class="filter-btn active" onclick="filter('all', this)">Tất cả</button>
+      <button class="filter-btn" onclick="filter('Bình', this)">Bình &amp; Lọ</button>
+      <button class="filter-btn" onclick="filter('Tượng', this)">Tượng</button>
+      <button class="filter-btn" onclick="filter('Sáng tác', this)">Gốm sáng tác</button>
+      <button class="filter-btn" onclick="filter('Đèn', this)">Đèn &amp; Trang trí</button>
+      <button class="filter-btn" onclick="filter('Phù điêu', this)">Phù điêu &amp; Tranh</button>
+      <button class="filter-btn" onclick="filter('Điêu khắc', this)">Điêu khắc</button>
+      <button class="filter-btn" onclick="filter('Đất nung', this)">Đất nung</button>
+      <button class="filter-btn" onclick="filter('Đĩa', this)">Đĩa &amp; Chén</button>
+    </div>
+    <div class="toolbar-right">
+      <input type="text" class="toolbar-search" id="collectionSearch" placeholder="Tìm hiện vật…" oninput="searchCollection(this.value)">
+      <div class="view-toggle">
+        <button class="vt-btn active" id="vtGrid" onclick="setView('grid')" title="Lưới">▦</button>
+        <button class="vt-btn" id="vtList" onclick="setView('list')" title="Danh sách">☰</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="collection-stats" id="collectionStats"></div>
+  <div class="gallery" id="gallery"></div>
+
+  <!-- PAGINATION -->
+  <div class="pagination" id="pagination"></div>
+
+  <div class="empty" id="emptyState" style="display:none">
+    <div class="empty-icon">◇</div>
+    <h3>Không tìm thấy hiện vật</h3>
+    <p style="font-size:0.8rem;margin-top:0.3rem;">Thử danh mục khác hoặc đặt câu hỏi cho AI</p>
+  </div>
+</div>
+
+<!-- ══════════ ABOUT ══════════ -->
+<div id="about" class="fade-in">
+  <div class="section" style="margin-top:2rem;">
+    <div class="section-header">
+      <div class="divider-line"></div>
+      <span>Giới thiệu Gốm Biên Hòa</span>
+      <div class="divider-line"></div>
+    </div>
+  </div>
+
+  <div class="about-section">
+    <div class="about-text">
+      <h2>Di sản <em>ba thế kỷ</em><br>nghệ thuật đất nung</h2>
+      <p>Gốm Biên Hòa khởi nguồn từ thế kỷ XVII, khi những nghệ nhân người Hoa đầu tiên theo chân Trần Thượng Xuyên lập lò gốm tại Cù Lao Phố (1679). Vùng đất Đồng Nai với nguồn đất sét phong phú và địa thế thuận lợi đã trở thành cái nôi của nghề gốm Nam Bộ.</p>
+      <p>Năm 1903, Trường Mỹ Nghệ Biên Hòa (École d'Art de Biên Hòa) — trường dạy nghề gốm đầu tiên tại Đông Dương — ra đời, mở ra kỷ nguyên vàng son. Dưới sự dẫn dắt của vợ chồng Robert &amp; Mariette Balick (1923–1958), gốm Biên Hòa kết hợp tinh hoa ba dòng gốm Việt — Hoa — Pháp, vang danh tại các triển lãm quốc tế.</p>
+      <div class="about-stats" id="aboutStats">
+        <div class="stat-item">
+          <div class="stat-num" data-target="345">0</div>
+          <div class="stat-label">Năm lịch sử</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-target="268">0</div>
+          <div class="stat-label">Hiện vật số hóa</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-target="9">0</div>
+          <div class="stat-label">Danh mục phân loại</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" data-target="5">0</div>
+          <div class="stat-label">Kỹ thuật tạo tác</div>
+        </div>
+      </div>
+    </div>
+    <div class="about-visual">
+      <img src="images/collection/0001.jpeg" alt="Gốm Biên Hòa">
+    </div>
+  </div>
+
+  <!-- VERTICAL TIMELINE -->
+  <div class="section" style="margin-top:3rem;">
+    <div class="section-header">
+      <div class="divider-line"></div>
+      <span>Dòng thời gian lịch sử</span>
+      <div class="divider-line"></div>
+    </div>
+  </div>
+
+  <div class="vtimeline">
+    <div class="vt-line"></div>
+    <div class="vt-item fade-in" data-year="1679">
+      <div class="vt-dot"></div>
+      <div class="vt-card">
+        <div class="vt-year">1679</div>
+        <h3>Khởi nguồn tại Cù Lao Phố</h3>
+        <p>Nghệ nhân gốm người Hoa theo chân tướng Trần Thượng Xuyên đến Biên Hòa, lập các lò gốm đầu tiên tại Cù Lao Phố (nay thuộc phường Hiệp Hòa). Họ mang theo kỹ thuật gốm truyền thống Quảng Đông, Phúc Kiến kết hợp với đất sét địa phương.</p>
+      </div>
+    </div>
+    <div class="vt-item fade-in" data-year="1903">
+      <div class="vt-dot"></div>
+      <div class="vt-card">
+        <div class="vt-year">1903</div>
+        <h3>Trường Mỹ Nghệ Biên Hòa ra đời</h3>
+        <p>Toàn quyền Paul Doumer thành lập École d'Art de Biên Hòa — trường dạy nghề gốm đầu tiên tại Đông Dương. Đây là bước ngoặt quan trọng, nâng tầm gốm Biên Hòa từ thủ công dân gian thành nghệ thuật bài bản.</p>
+      </div>
+    </div>
+    <div class="vt-item fade-in" data-year="1923">
+      <div class="vt-dot"></div>
+      <div class="vt-card">
+        <div class="vt-year">1923 – 1958</div>
+        <h3>Kỷ nguyên Balick — Thời kỳ hoàng kim</h3>
+        <p>Vợ chồng Robert &amp; Mariette Balick tiếp quản Trường Mỹ Nghệ Biên Hòa. Mariette phát triển dòng men xanh đồng (Vert de Biên Hòa) huyền thoại. Kết hợp tinh hoa ba dòng gốm Việt – Hoa – Pháp tạo nên phong cách độc đáo không nơi nào có được.</p>
+      </div>
+    </div>
+    <div class="vt-item fade-in" data-year="1925">
+      <div class="vt-dot"></div>
+      <div class="vt-card">
+        <div class="vt-year">1925 &amp; 1931</div>
+        <h3>Vang danh quốc tế</h3>
+        <p>Gốm Biên Hòa tham dự Exposition Internationale des Arts Décoratifs (Paris 1925) và Exposition Coloniale Internationale (Paris 1931), giành nhiều giải thưởng danh giá. Thế giới biết đến dòng gốm Việt Nam qua sắc men xanh đồng đặc trưng.</p>
+      </div>
+    </div>
+    <div class="vt-item fade-in" data-year="1960">
+      <div class="vt-dot"></div>
+      <div class="vt-card">
+        <div class="vt-year">1960 – nay</div>
+        <h3>Bảo tồn và phát triển</h3>
+        <p>Các làng gốm Tân Vạn, Hóa An, Bửu Long tiếp nối truyền thống. Gốm Biên Hòa được công nhận là Di sản văn hóa phi vật thể cấp quốc gia, trở thành biểu tượng văn hóa của tỉnh Đồng Nai.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY TECHNIQUES -->
+  <div class="section" style="margin-top:3rem;">
+    <div class="section-header">
+      <div class="divider-line"></div>
+      <span>Kỹ thuật đặc trưng</span>
+      <div class="divider-line"></div>
+    </div>
+  </div>
+
+  <div class="techniques-grid fade-in">
+    <div class="tech-card">
+      <div class="tech-icon">◈</div>
+      <h4>Khắc chìm</h4>
+      <p>Kỹ thuật khắc hoa văn chìm vào bề mặt gốm khi đất còn ướt, tạo rãnh sâu để tô men nhiều màu — đặc trưng nhất của gốm Biên Hòa.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">◇</div>
+      <h4>Đắp nổi</h4>
+      <p>Tạo hình hoa văn nổi trên bề mặt sản phẩm, thường dùng cho đề tài rồng phượng, hoa lá. Kết hợp men đa sắc tạo hiệu ứng 3D.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">◆</div>
+      <h4>Men xanh đồng</h4>
+      <p>Vert de Biên Hòa — dòng men đặc trưng nhất, được Mariette Balick phát triển từ oxit đồng. Sắc xanh đồng huyền ảo không nơi nào có được.</p>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">○</div>
+      <h4>Men tro rơm</h4>
+      <p>Men ta truyền thống pha chế từ tro rơm, tro lò — bí quyết gia truyền tạo sắc celadon xanh ngọc mềm mại, mang hơi thở đồng quê Nam Bộ.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ AI ASSISTANT ══════════ -->
+<div id="aiSection">
+  <div class="section" style="margin-top:2rem;">
+    <div class="section-header">
+      <div class="divider-line"></div>
+      <span>Trợ lý AI — Giám tuyển ảo</span>
+      <div class="divider-line"></div>
+    </div>
+  </div>
+
+  <div class="ai-container">
+    <div class="ai-sidebar">
+      <div class="ai-profile">
+        <div class="ai-avatar">✦</div>
+        <h3>Giám tuyển AI</h3>
+        <p>Trợ lý thông minh am hiểu lịch sử và nghệ thuật Gốm Biên Hòa</p>
+      </div>
+      <div class="ai-suggestions">
+        <div class="ai-suggest-title">Câu hỏi gợi ý</div>
+        <button class="suggest-btn" onclick="askSuggestion(this)">Men xanh đồng (Vert de Biên Hòa) có gì đặc biệt?</button>
+        <button class="suggest-btn" onclick="askSuggestion(this)">Tìm hiện vật từ thời kỳ Balick</button>
+        <button class="suggest-btn" onclick="askSuggestion(this)">So sánh kỹ thuật khắc chìm và đắp nổi</button>
+        <button class="suggest-btn" onclick="askSuggestion(this)">Tác phẩm nào từng triển lãm tại Paris?</button>
+        <button class="suggest-btn" onclick="askSuggestion(this)">Lịch sử làng gốm Tân Vạn</button>
+      </div>
+    </div>
+
+    <div class="ai-chat">
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-msg ai">
+          <div class="msg-avatar">✦</div>
+          <div class="msg-body">
+            <div class="msg-name">Giám tuyển AI</div>
+            <div class="msg-text">Xin chào! Tôi là giám tuyển ảo của phòng trưng bày Gốm Biên Hòa — bộ sưu tập 268 hiện vật số hóa từ Trường Cao đẳng Mỹ thuật Trang trí Đồng Nai. Tôi am hiểu sâu về lịch sử, kỹ thuật tạo tác, dòng men đặc trưng, và từng hiện vật trong bộ sưu tập. Hãy hỏi tôi bất kỳ điều gì!</div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-wrap">
+        <input type="text" class="chat-input" id="chatInput" placeholder="Nhập câu hỏi về Gốm Biên Hòa…" onkeydown="if(event.key==='Enter')sendChat()">
+        <button class="chat-send" id="chatSendBtn" onclick="sendChat()">
+          <span id="chatSendIcon">➤</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lb-backdrop" onclick="closeLightbox()"></div>
+  <div class="lb-content">
+    <button class="lb-close" onclick="closeLightbox()">✕</button>
+    <button class="lb-nav lb-prev" onclick="lbNav(-1)">‹</button>
+    <button class="lb-nav lb-next" onclick="lbNav(1)">›</button>
+    <div class="lb-visual" id="lbVisual">
+      <img id="lbImg" src="" alt="">
+    </div>
+    <div class="lb-detail">
+      <div class="lb-cat" id="lbCat"></div>
+      <div class="lb-name" id="lbName"></div>
+      <div class="lb-ma" id="lbMa"></div>
+      <div class="lb-divider"></div>
+      <div class="lb-attrs">
+        <div>
+          <div class="lb-attr-label">Chất liệu</div>
+          <div class="lb-attr-val" id="lbMaterial"></div>
+        </div>
+        <div>
+          <div class="lb-attr-label">Kích thước</div>
+          <div class="lb-attr-val" id="lbSize"></div>
+        </div>
+        <div>
+          <div class="lb-attr-label">Năm sáng tác</div>
+          <div class="lb-attr-val" id="lbPeriod"></div>
+        </div>
+        <div>
+          <div class="lb-attr-label">Nguồn gốc</div>
+          <div class="lb-attr-val" id="lbOrigin"></div>
+        </div>
+      </div>
+      <div class="lb-period-tag" id="lbOriginTag"></div>
+    </div>
+    <div class="lb-mobile-nav">
+      <button onclick="lbNav(-1)"><span class="mn-icon">‹</span> Trước</button>
+      <button onclick="closeLightbox()"><span class="mn-icon">✕</span> Đóng</button>
+      <button onclick="lbNav(1)">Tiếp <span class="mn-icon">›</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- BACK TO TOP -->
+<button class="back-top" id="backTop" onclick="navTo('#hero')">↑</button>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">Gốm Biên Hòa</div>
+    <span style="display:block;margin-top:0.3rem;">Phòng trưng bày nghệ thuật gốm mỹ nghệ — 268 hiện vật số hóa</span>
+  </div>
+  <div class="footer-links">
+    <a onclick="navTo('#collection')">Bộ sưu tập</a>
+    <a onclick="navTo('#about')">Giới thiệu</a>
+    <a onclick="navTo('#aiSection')">Trợ lý AI</a>
+  </div>
+  <span>© 2026 — Trường CĐ Mỹ thuật Trang trí Đồng Nai</span>
+</footer>
+
+<script src="collection_data.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
